@@ -1,9 +1,10 @@
 const supertest = require("supertest");
-const app = require("../../src/app");
-const request = supertest(app);
 
-const truncate = require("../utils/truncate");
+const app = require("../../src/app");
 const { User } = require("../../src/app/models");
+const truncate = require("../utils/truncate");
+
+const request = supertest(app);
 
 describe("Authentication", () => {
   beforeEach(async () => {
@@ -67,5 +68,19 @@ describe("Authentication", () => {
       .set("Authorization", `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
+  });
+
+  it("should not be able to access private routes without jwt token", async () => {
+    const response = await request.get("/dashboard");
+
+    expect(response.status).toBe(401);
+  });
+
+  it("should not be able to access private routes with invalid jwt token", async () => {
+    const response = await request
+      .get("/dashboard")
+      .set("Authorization", `Bearer 123456`);
+
+    expect(response.status).toBe(401);
   });
 });

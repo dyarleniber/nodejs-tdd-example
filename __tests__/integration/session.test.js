@@ -84,10 +84,14 @@ describe("Authentication", () => {
   it("should receive email notification when authenticated", async () => {
     const user = await factory.create("User");
 
-    const response = await request
-      .get("/dashboard")
-      .set("Authorization", `Bearer ${user.generateToken()}`);
+    await request.post("/sessions").send({
+      email: user.email,
+      password: user.password
+    });
 
     expect(transport.sendMail).toHaveBeenCalledTimes(1);
+    expect(transport.sendMail.mock.calls[0][0].to).toBe(
+      `${user.name} <${user.email}>`
+    );
   });
 });

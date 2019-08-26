@@ -2,8 +2,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 
-const { User } = require("../../src/app/models");
 const truncate = require("../utils/truncate");
+const factory = require("../factories");
 
 describe("User", () => {
   beforeEach(async () => {
@@ -11,11 +11,7 @@ describe("User", () => {
   });
 
   it("should encrypt user password", async () => {
-    const user = await User.create({
-      name: "testpassword",
-      email: "testpassword@test.com",
-      password: "123123"
-    });
+    const user = await factory.create("User");
 
     const compareHash = await bcrypt.compare(user.password, user.password_hash);
 
@@ -23,11 +19,7 @@ describe("User", () => {
   });
 
   it("should generate a valid token", async () => {
-    const user = await User.create({
-      name: "testtoken",
-      email: "testtoken@test.com",
-      password: "123123"
-    });
+    const user = await factory.create("User");
 
     const token = user.generateToken();
 

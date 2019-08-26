@@ -39,4 +39,33 @@ describe("Authentication", () => {
 
     expect(response.status).toBe(401);
   });
+
+  it("should return a token when authenticated", async () => {
+    const user = await User.create({
+      name: "testtoken",
+      email: "testtoken@test.com",
+      password: "123123"
+    });
+
+    const response = await request.post("/sessions").send({
+      email: user.email,
+      password: user.password
+    });
+
+    expect(response.body).toHaveProperty("token");
+  });
+
+  it("should be able to access private routes when authenticated", async () => {
+    const user = await User.create({
+      name: "testprivateroute",
+      email: "testprivateroute@test.com",
+      password: "123123"
+    });
+
+    const response = await request
+      .get("/dashboard")
+      .set("Authorization", `Bearer ${user.generateToken()}`);
+
+    expect(response.status).toBe(200);
+  });
 });

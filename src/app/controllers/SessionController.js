@@ -1,3 +1,4 @@
+const Mail = require("../services/MailService");
 const { User } = require("../models");
 
 class SessionController {
@@ -13,6 +14,13 @@ class SessionController {
     if (!(await user.checkPassword(password))) {
       return res.status(401).json({ message: "Incorrect password" });
     }
+
+    await Mail.send({
+      from: "Noreply <noreply@noreply.com>",
+      to: `${user.name} <${user.email}>`,
+      subject: "New access",
+      text: "Hello, we have identified a new access to your account."
+    });
 
     return res.json({
       user,

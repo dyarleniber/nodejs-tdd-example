@@ -12,8 +12,8 @@ describe("User", () => {
 
   it("should encrypt user password", async () => {
     const user = await User.create({
-      name: "test",
-      email: "test@test.com",
+      name: "testpassword",
+      email: "testpassword@test.com",
       password: "123123"
     });
 
@@ -24,8 +24,8 @@ describe("User", () => {
 
   it("should generate a valid token", async () => {
     const user = await User.create({
-      name: "test",
-      email: "test@test.com",
+      name: "testtoken",
+      email: "testtoken@test.com",
       password: "123123"
     });
 

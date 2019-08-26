@@ -3,3 +3,5 @@ node_modules
 .env
 
 __tests__/database.sqlite
+
+__tests__/coverage

@@ -33,7 +33,18 @@ describe("Authentication", () => {
     expect(response.status).toBe(200);
   });
 
-  it("should not be able to authenticate with invalid credentials", async () => {
+  it("should not be able to authenticate with invalid user", async () => {
+    const user = await factory.build("User");
+
+    const response = await request.post("/sessions").send({
+      email: user.email,
+      password: user.password
+    });
+
+    expect(response.status).toBe(401);
+  });
+
+  it("should not be able to authenticate with invalid password", async () => {
     const user = await factory.create("User", {
       password: "123123"
     });
